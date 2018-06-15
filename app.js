@@ -1,14 +1,31 @@
-const http = require('http');
+var http = require('http');
+var twit = require('twit');
+var config = require('./config.js');
+// var fs = require('fs');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+var Twitter = new twit(config);
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+var userList = { screen_name: 'jakehdchoi', count: 3 };
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+Twitter.get('statuses/user_timeline', userList , function(err, data) {
+    console.log(data);
+    for (var i = 0; i < data.length ; i++) {
+    console.log(data[i].text);
+  }
+})
+
+
+
+
+
+
+
+// var app = http.createServer(function(request,response){
+//     var url = request.url;
+//     if(request.url == '/'){
+//       url = '/index.html';
+//     }
+//     response.writeHead(200);
+//     response.end('Hello');
+// });
+// app.listen(3000);
