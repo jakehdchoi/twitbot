@@ -1,7 +1,8 @@
 var http = require('http');
 var twit = require('twit');
 var config = require('./config.js');
-// var fs = require('fs');
+var fs = require('fs');
+var qs = require('querystring');
 
 var Twitter = new twit(config);
 
@@ -11,15 +12,16 @@ var userList = [
     'VitalikButerin'
 ]
 
+var numberOfTwits = 3;
+
 const before = Date.now();
 
 for (var i = 0; i < userList.length; i++) {
     Twitter.get('statuses/user_timeline', {
         screen_name: userList[i],
-        count: 20,
+        count: numberOfTwits,
         tweet_mode: 'extended'
     }, function(err, data) {
-        // console.log(data);
         if (err) {
             console.log(err);
         } else {
@@ -31,6 +33,16 @@ for (var i = 0; i < userList.length; i++) {
                 console.log((Date.now() - before) / 1000);
                 console.log('');
             }
+            // console.log(data);
+            var stringData = JSON.stringify(data);
+            var title = 'example';
+            fs.appendFile(`database/${title}.json`, stringData, 'utf8', function(err){
+                if (err) {
+                    console.log("An error occured while writing JSON Object to File.");
+                    return console.log(err);
+                }
+                // console.log("JSON file has been saved.");
+            });
         }
     })
 }
